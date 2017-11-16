@@ -23,7 +23,7 @@ are generated under .aws.
 ``` bash
 # from your project home
 lein run
-# in another terminal
+# in another terminal, from your project home
 lein figwheel
 # from browser
 http://localhost:3000
