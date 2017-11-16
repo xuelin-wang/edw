@@ -8,7 +8,8 @@ Goal is to improve development efficiency.
 
 ### Setup
 #### AWS Setup
-* AWS region and credentials needs be setup using command:
+* AWS region and credentials needs be setup using command
+
 ``` bash
 aws configure
 ```
