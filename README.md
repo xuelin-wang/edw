@@ -1,21 +1,54 @@
 # edw
 
-generated using Luminus version "2.9.12.01"
+### Summary
+Goal is to improve development efficiency.
+* Certain things are easier to be done in a html page.
+* AWS API playground
+* Ideas playground
 
-FIXME
+### Setup
+#### AWS Setup
+* AWS region and credentials needs be setup using command:
+``` bash
+aws configure
+```
+This will generate .aws directory in your home directory. Two files
+are generated under .aws.
+#### Prerequisite Programs
+* JDK 8 or later
+* down lein and ensure it's executable and in your path:
+ https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
 
-## Prerequisites
+#### Run Locally
+``` bash
+# from your project home
+lein run
+# in another terminal
+lein figwheel
+# from browser
+http://localhost:3000
+```
 
-You will need [Leiningen][1] 2.0 or above installed.
+#### Build
+``` bash
+lein uberjar
+```
 
-[1]: https://github.com/technomancy/leiningen
+### Questions?
+Contact xwang@evident.io
 
-## Running
+### Sample .aws config files content
+File config sample content:
+```
+[default]
+region = us-west-1
+output = json
+```
+File credentials sample content:
+```
+[default]
+aws_access_key_id = XXXXXX
+aws_secret_access_key = YYYYYYYYYY
 
-To start a web server for the application, run:
+```
 
-    lein run 
-
-## License
-
-Copyright © 2017 FIXME
