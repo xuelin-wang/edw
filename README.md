@@ -20,7 +20,7 @@ are generated under .aws.
  https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
 
 #### Run Locally
-```` bash
+``` bash
 # from your project home
 lein run
 # in another terminal, from your project home
