@@ -23,14 +23,12 @@
                         nil)}
        props)]))
 
-(defn- textarea-input [event-id event-params init-val props]
-  (let [val (r/atom init-val)
-        save #(rf/dispatch (into [] (concat [event-id] event-params [@val])))]
+(defn- textarea-input [event-id event-params val props]
+  (let [save #(rf/dispatch (into [] (concat [event-id] event-params [%])))]
     [:textarea
      (merge
        {
-        :default-value init-val
-        :on-blur save
-        :on-change #(reset! val (-> % .-target .-value))
-        :on-key-up #(reset! val (-> % .-target .-value))}
+        :value val
+        :on-change #(save (-> % .-target .-value))
+        }
        props)]))

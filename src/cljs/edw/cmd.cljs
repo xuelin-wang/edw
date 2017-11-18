@@ -3,6 +3,7 @@
     [re-frame.core :as rf]
     [edw.common-utils :as common-utils]
     [edw.ui :as ui]
+    [clojure.string :as str]
     )
 )
 
@@ -14,7 +15,7 @@
         ]
     [:div.container
      [:div.row
-      [:div.col-md-4
+      [:div.col-sm-12
        [:select
         {:value cmd-type
          :on-change #(rf/dispatch [:update-value [:cmd :cmd-type] (-> % .-target .-value)])
@@ -24,12 +25,12 @@
        [:button.btn.btn-default.btn-sm
         {:type "button" :on-click #(rf/dispatch [:execute-cmd])} "Run"]
        [:br]
-       [ui/textarea-input :update-value [[:cmd :script]] (:script cmd) {:rows 10 :cols 50}]
+       [ui/textarea-input :update-value [[:cmd :script cmd-type]] (get-in cmd [:script cmd-type]) {:rows 10 :cols 50}]
        ]]
      [:div.row
-      [:div.col-md-4
+      [:div.col-sm-12
        [:pre {:dangerouslySetInnerHTML
-              {:__html output}}]
+              {:__html (str/replace output "\\n" "\n")}}]
        ]
       ]
      ]

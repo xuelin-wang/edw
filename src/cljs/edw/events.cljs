@@ -56,7 +56,7 @@
     (let
       [cmd (:cmd db)
        cmd-type (or (:cmd-type cmd) "bash")
-       params {:cmd-type cmd-type :script (:script cmd)}]
+       params {:cmd-type cmd-type :script (get-in cmd [:script cmd-type])}]
       {:http-xhrio {:method          :post
                     :uri             "/cmd"
                     :timeout         8000
