@@ -2,7 +2,9 @@
 /lib
 /classes
 /checkouts
+figwheel_server.log
 pom.xml
+edw.iml
 *.jar
 *.class
 /.lein-*
