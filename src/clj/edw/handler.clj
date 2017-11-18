@@ -2,6 +2,7 @@
   (:require [compojure.core :refer [routes wrap-routes]]
             [edw.layout :refer [error-page]]
             [edw.routes.home :refer [home-routes]]
+            [edw.routes.cmd :refer [cmd-routes]]
             [edw.routes.services :refer [service-routes]]
             [compojure.route :as route]
             [edw.env :refer [defaults]]
@@ -17,6 +18,7 @@
     (-> #'home-routes
         (wrap-routes middleware/wrap-csrf)
         (wrap-routes middleware/wrap-formats))
+    #'cmd-routes
     #'service-routes
     (route/not-found
       (:body

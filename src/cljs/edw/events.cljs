@@ -1,5 +1,7 @@
 (ns edw.events
   (:require [edw.db :as db]
+            [ajax.core :as ajax]
+            [day8.re-frame.http-fx]
             [re-frame.core :refer [dispatch reg-event-db reg-event-fx reg-sub]]))
 
 ;;dispatchers
@@ -14,7 +16,6 @@
   (fn [db [_ page]]
     (assoc db :page page)))
 
-
 (reg-event-db
   :update-value
   (fn [db [_ value-path val]]
@@ -24,6 +25,50 @@
   :set-docs
   (fn [db [_ docs]]
     (assoc db :docs docs)))
+
+
+(defn process-response [db [_ path response]]
+  (-> db
+      (assoc-in (conj path :loading?) false)
+      (assoc-in (conj path :result) response)))
+
+(reg-event-db
+  :process-cmd-response
+  []
+  (fn [db [_ response]] (process-response db [_ [:cmd] response])))
+
+
+(defn url-encode [ss] (js/encodeURIComponent ss))
+(defn url-encode-map [mm]
+  (let [nvs (into [] mm)
+        encoded-nvs (map #(into [] (map url-encode %))
+                         nvs)]
+    (into {} (into [] encoded-nvs))))
+
+(defn clj->json [ds] (.stringify js/JSON (clj->js ds)))
+(defn clj->url-encoded-json [ds] (url-encode (clj->json ds)))
+
+
+(reg-event-fx
+  :execute-cmd
+  []
+  (fn [{:keys [db]} [_]]
+    (let
+      [cmd (:cmd db)
+       cmd-type (or (:cmd-type cmd) "bash")
+       params {:cmd-type cmd-type :script (:script cmd)}]
+      {:http-xhrio {:method          :post
+                    :uri             "/cmd"
+                    :timeout         8000
+                    :response-format (ajax/json-response-format {:keywords? true})
+
+                    :format           (ajax/url-request-format)
+                    :params         {:p (clj->url-encoded-json params)}
+
+                    :on-success      [:process-cmd-response]
+                    :on-failure      [:process-cmd-response]}
+       :db  (assoc-in db [:cmd :loading?] true)})))
+
 
 ;;subscriptions
 

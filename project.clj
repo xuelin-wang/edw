@@ -27,6 +27,7 @@
                  [org.webjars/bootstrap "4.0.0-alpha.5"]
                  [org.webjars/font-awesome "4.7.0"]
                  [re-frame "0.10.2"]
+                 [day8.re-frame/http-fx "0.1.4"]
                  [reagent "0.7.0"]
                  [reagent-utils "0.2.1"]
                  [ring-webjars "0.2.0"]
@@ -42,7 +43,7 @@
   :jvm-opts ["-server" "-Dconf=.lein-env"]
   :java-source-paths ["src/java"]
   :javac-options ["-target" "1.8" "-source" "1.8"]
-  :source-paths ["src/clj" "{{cljc-path}}"]
+  :source-paths ["src/clj" "src/cljc"]
   :test-paths ["test/clj"]
   :resource-paths ["resources" "target/cljsbuild"]
   :target-path "target/%s/"
