@@ -24,6 +24,7 @@
         (map-indexed (fn [idx val] [:option {:key (str "_cmd_t_" idx)} val]) common-utils/cmd-types)]
        [:button.btn.btn-default.btn-sm
         {:type "button" :on-click #(rf/dispatch [:execute-cmd])} "Run"]
+       "Search script:"[ui/text-input :update-value [[:cmd :search-string]] "text" (:search-string cmd) true nil]
        [:br]
        [ui/textarea-input :update-value [[:cmd :script cmd-type]] (get-in cmd [:script cmd-type]) {:rows 10 :cols 50}]
        ]]

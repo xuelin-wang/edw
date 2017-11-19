@@ -1,12 +1,17 @@
 (ns edw.executors
   (:require
     [clojure.string :as str]
+    [edw.redis :as r]
     [edw.common-utils])
   (:import [edw.util CmdUtils]))
 
 (defn- execute-sh [script]
-  (let [exitOutputError (CmdUtils/executeBash (into-array ["/bin/bash" "-c" script]) nil nil (int 100000))]
-    {:exit (aget exitOutputError 0)
+  (let [exitOutputError (CmdUtils/executeBash (into-array ["/bin/bash" "-c" script]) nil nil (int 100000))
+        exit-code (aget exitOutputError 0)]
+    (when (= exit-code "0")
+      (r/with-redis redis (.zincrby redis "scripts/bash" 1.0 script) )
+      )
+    {:exit exit-code
      :output (aget exitOutputError 1)
      :error (aget exitOutputError 2)}
     ))
@@ -14,6 +19,7 @@
 (defn- execute-clj [script]
   (let
     [results (eval (read-string script))]
+    (r/with-redis redis (.zincrby redis "scripts/clojure" 1.0 script) )
     {:data results}))
 
 (defn execute [script-type script]
