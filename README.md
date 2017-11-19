@@ -17,7 +17,7 @@ This will generate .aws directory in your home directory. Two files
 are generated under .aws.
 #### Prerequisite Programs
 * JDK 8 or later
-* down lein and ensure it's executable and in your path:
+* download lein and ensure it's executable and in your path:
  https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
 
 #### Run Locally

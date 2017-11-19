@@ -5,8 +5,10 @@
             [edw.config :refer [env]]
             [clojure.tools.cli :refer [parse-opts]]
             [clojure.tools.logging :as log]
+            [edw.redis]
             [mount.core :as mount])
-  (:gen-class))
+  (:gen-class)
+  )
 
 (def cli-options
   [["-p" "--port PORT" "Port number"
@@ -33,6 +35,7 @@
 
 
 (defn stop-app []
+  (edw.redis/close-redis)
   (doseq [component (:stopped (mount/stop))]
     (log/info component "stopped"))
   (shutdown-agents))

@@ -35,6 +35,7 @@
                  [ring/ring-defaults "0.3.1"]
                  [secretary "1.2.3"]
                  [selmer "1.11.2"]
+                 [redis.clients/jedis "2.9.0"]
                  [com.amazonaws/aws-java-sdk-bundle "1.11.229"]
                  ]
 
