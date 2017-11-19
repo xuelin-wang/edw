@@ -1,12 +1,10 @@
 package edw.aws;
 
-import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.cloudtrail.AWSCloudTrail;
-import com.amazonaws.services.cloudtrail.AWSCloudTrailClient;
 import com.amazonaws.services.cloudtrail.AWSCloudTrailClientBuilder;
 import com.amazonaws.services.config.AmazonConfig;
 import com.amazonaws.services.config.AmazonConfigClientBuilder;
@@ -15,7 +13,9 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class AwsApiGateway {
     private static final Map<String, Object> regionProfileToService =
