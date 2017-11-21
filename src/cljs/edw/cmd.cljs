@@ -41,7 +41,7 @@
 
      [:div.row
       [:div.col-sm-12
-       [ui/raw-textbox output]
+       [ui/raw-textbox nil output]
        ]
       ]
      ]

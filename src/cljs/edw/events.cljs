@@ -35,7 +35,8 @@
 (reg-event-db
   :process-cmd-response
   []
-  (fn [db [_ response]] (process-response db [_ [:cmd] response])))
+  (fn [db [_ response]]
+    (process-response db [_ [:cmd] response])))
 
 (reg-event-db
   :process-cmd-search-response
@@ -65,7 +66,7 @@
        cmd-type (or (:cmd-type cmd) "bash")
        params {:cmd-type cmd-type :script (get-in cmd [:script cmd-type])}]
       {:http-xhrio {:method          :post
-                    :uri             "/cmd"
+                    :uri             "/cmdExecute"
                     :timeout         8000
                     :response-format (ajax/json-response-format {:keywords? true})
 
