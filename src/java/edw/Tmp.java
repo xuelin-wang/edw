@@ -1,5 +1,7 @@
 package edw;
 
+import com.amazonaws.services.elasticmapreduce.AmazonElasticMapReduce;
+import com.amazonaws.services.elasticmapreduce.model.ClusterSummary;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AccessControlList;
 import com.amazonaws.services.s3.model.Bucket;
@@ -20,7 +22,7 @@ public class Tmp {
 //
 //        DescribeDeliveryChannelStatusResult result = amazonConfig.describeDeliveryChannelStatus();
 
-//        AWSCloudTrail cloudTrail = AwsApiGateway.getAWSCloudTrailClient(null);
+//        AWSCloudTrail cloudTrail = AwsApiGateway.getAWSCloudTrail(null);
 //        DescribeTrailsResult trailsRes = cloudTrail.describeTrails();
 //        GetTrailStatusRequest req = new GetTrailStatusRequest();
 //        for (Trail trail: trailsRes.getTrailList()) {
@@ -29,31 +31,35 @@ public class Tmp {
 //            boolean isLogging = res.isLogging();
 //        }
 
-        Map<String, AmazonS3> servicesMap = AwsApiGateway.getAllAmazonS3s(null);
-        AmazonS3 service = servicesMap.entrySet().iterator().next().getValue();
+//        Map<String, AmazonS3> servicesMap = AwsApiGateway.getAllAmazonS3s(null);
+//        AmazonS3 service = servicesMap.entrySet().iterator().next().getValue();
+//
+//        List<Bucket> buckets = service.listBuckets();
+//        for (Bucket bucket: buckets) {
+//            String bucketName = bucket.getName();
+//
+//            String location = service.getBucketLocation(bucketName);
+//            if ("US".equalsIgnoreCase(location)) {
+//                location = "us-east-1";
+//            }
+//            else if ("EU".equalsIgnoreCase(location)) {
+//                location = "eu-west-1";
+//            }
+//
+//            AmazonS3 regionService = servicesMap.get(location);
+//
+//            System.out.println("bucket: " + bucketName + ", location: " + location);
+//            AccessControlList acl = regionService.getBucketAcl(bucket.getName());
+//
+//            List<Grant> grants = acl.getGrantsAsList();
+//
+//            System.out.println("there");
+//        }
 
-        List<Bucket> buckets = service.listBuckets();
-        for (Bucket bucket: buckets) {
-            String bucketName = bucket.getName();
-
-            String location = service.getBucketLocation(bucketName);
-            if ("US".equalsIgnoreCase(location)) {
-                location = "us-east-1";
-            }
-            else if ("EU".equalsIgnoreCase(location)) {
-                location = "eu-west-1";
-            }
-
-            AmazonS3 regionService = servicesMap.get(location);
-
-            System.out.println("bucket: " + bucketName + ", location: " + location);
-            AccessControlList acl = regionService.getBucketAcl(bucket.getName());
-
-            List<Grant> grants = acl.getGrantsAsList();
-
-            System.out.println("there");
+        AmazonElasticMapReduce emr = AwsApiGateway.getAmazonElasticMapReduce(null, null);
+        List<ClusterSummary> clusters = emr.listClusters().getClusters();
+        for (ClusterSummary cluster: clusters) {
         }
-
 
         System.out.println("here");
     }

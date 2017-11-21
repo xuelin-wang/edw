@@ -2,9 +2,10 @@
   (:require
     [reagent.core :as r]
     [re-frame.core :as rf]
+    [clojure.string :as str]
     ))
 
-(defn- text-input [event-id event-params input-type init-val save-on-change? props]
+(defn text-input [event-id event-params input-type init-val save-on-change? props]
   (let [val (r/atom init-val)
         stop #(reset! val init-val)
         save #(rf/dispatch (into [] (concat [event-id] event-params [(if (nil? %) @val %)])))
@@ -23,7 +24,7 @@
                         nil)}
        props)]))
 
-(defn- textarea-input [event-id event-params val props]
+(defn textarea-input [event-id event-params val props]
   (let [save #(rf/dispatch (into [] (concat [event-id] event-params [%])))]
     [:textarea
      (merge
@@ -32,3 +33,30 @@
         :on-change #(save (-> % .-target .-value))
         }
        props)]))
+
+(defn raw-textbox [props text]
+  (when text
+    [:pre (merge props
+                 {:dangerouslySetInnerHTML
+                  {:__html (str/replace (str text) "\\n" "\n")}}
+                 ) ]
+    )
+  )
+
+(defn items-list [options key-prefix]
+  (let [items
+        (vec
+          (map-indexed
+            (fn [index item]
+              (let [comp-key (str key-prefix "-" index)]
+                [:div.col-sm-12
+                 [raw-textbox {:key comp-key} item]
+                 ]
+                )
+              )
+            options)
+          )
+        ]
+    (into [:div] items)
+    )
+  )

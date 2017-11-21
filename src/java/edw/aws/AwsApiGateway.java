@@ -10,6 +10,8 @@ import com.amazonaws.services.config.AmazonConfig;
 import com.amazonaws.services.config.AmazonConfigClientBuilder;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.elasticmapreduce.AmazonElasticMapReduce;
+import com.amazonaws.services.elasticmapreduce.AmazonElasticMapReduceClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
@@ -74,7 +76,7 @@ public class AwsApiGateway {
         return service;
     }
 
-    public static synchronized AWSCloudTrail getAWSCloudTrailClient(String region, String profileName) {
+    public static synchronized AWSCloudTrail getAWSCloudTrail(String region, String profileName) {
         AWSCloudTrail service = (AWSCloudTrail)getCachedService(region, profileName);
         if (service != null) {
             return service;
@@ -104,6 +106,21 @@ public class AwsApiGateway {
         return service;
     }
 
+    public static synchronized AmazonElasticMapReduce getAmazonElasticMapReduce(String region, String profileName) {
+        AmazonElasticMapReduce service = (AmazonElasticMapReduce)getCachedService(region, profileName);
+        if (service != null) {
+            return service;
+        }
+
+        service = AmazonElasticMapReduceClientBuilder.standard()
+                .withRegion(getRegionName(region))
+                .withCredentials(getAWSCredentialsProvider(profileName))
+                .build();
+
+        regionProfileToService.put(toCacheKey(region, profileName), service);
+        return service;
+    }
+
     public static synchronized Map<String, AmazonS3> getAllAmazonS3s(String profileName) {
         Map<String, AmazonS3> services = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         for (Regions regions: Regions.values()) {
@@ -115,4 +132,7 @@ public class AwsApiGateway {
         }
         return services;
     }
+
+
+
 }

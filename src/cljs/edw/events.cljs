@@ -37,6 +37,13 @@
   []
   (fn [db [_ response]] (process-response db [_ [:cmd] response])))
 
+(reg-event-db
+  :process-cmd-search-response
+  []
+  (fn [db [_ response]]
+    (assoc-in db [:cmd :scripts] (:data response))
+    ))
+
 
 (defn url-encode [ss] (js/encodeURIComponent ss))
 (defn url-encode-map [mm]
@@ -69,6 +76,31 @@
                     :on-failure      [:process-cmd-response]}
        :db  (assoc-in db [:cmd :loading?] true)})))
 
+
+(reg-event-fx
+  :search-scripts
+  []
+  (fn [{:keys [db]} [_ search-string]]
+    (println (str "search-string: " search-string))
+    (let [cmd (:cmd db)
+          cmd-type (or (:cmd-type cmd) "bash")
+          params {:cmd-type cmd-type :pattern search-string}]
+      {
+       :http-xhrio {:method          :post
+                    :uri             "/cmdSearchScripts"
+                    :timeout         8000
+                    :response-format (ajax/json-response-format {:keywords? true})
+
+                    :format           (ajax/url-request-format)
+                    :params         {:p (clj->url-encoded-json params)}
+
+                    :on-success      [:process-cmd-search-response]
+                    :on-failure      [:process-cmd-search-response]}
+       :db (assoc-in db [:cmd :search-string] search-string)}
+
+      )
+    )
+  )
 
 ;;subscriptions
 

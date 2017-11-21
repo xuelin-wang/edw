@@ -20,4 +20,17 @@
                results (executors/execute cmd-type script)
                results-str (json/generate-string results)]
            (response/ok results-str))
-         (response/ok {:data permission-denied})))))
+         (response/ok {:data permission-denied}))))
+
+   (POST "/cmdSearchScripts" [p :as request]
+     (let [p-str (URLDecoder/decode p "UTF-8")
+           param (json/parse-string p-str)]
+       (if true
+         (let [cmd-type (get param "cmd-type")
+               pattern (get param "pattern")
+               results (executors/search-scripts cmd-type pattern)
+               results-str (json/generate-string results)]
+           (response/ok results-str))
+         (response/ok {:data permission-denied}))))
+
+           )
