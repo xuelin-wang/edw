@@ -67,3 +67,20 @@ body {
     }
 }
 
+
+
+.alternate-a {
+    background-color: #CC9999;
+    color: black;
+}
+.alternate-a:hover {
+    background-color: blue;
+}
+.alternate-b {
+    background-color: #9999CC;
+    color: black;
+}
+.alternate-b:hover {
+    background-color: blue;
+}
+

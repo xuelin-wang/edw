@@ -4,21 +4,24 @@
   :url "http://what.com"
 
   :dependencies [[ch.qos.logback/logback-classic "1.2.3"]
+                 [cheshire/cheshire "5.8.0"]
                  [clj-time "0.14.2"]
-                 [cljs-ajax "0.7.3"]
+                 [cljs-ajax "0.7.3" :exclusions [ceshire]]
+                 [org.clojure/core.async "0.3.465"]
                  [com.walmartlabs/lacinia "0.23.0-rc-1"]
                  [compojure "1.6.0"]
                  [cprop "0.1.12-SNAPSHOT"]
                  [funcool/struct "1.1.0"]
-                 [luminus-jetty "0.1.5"]
+                 [luminus-jetty "0.1.5" :exclusions [com.fasterxml.jackson.core/jackson-core]]
                  [luminus-nrepl "0.1.4"]
                  [luminus/ring-ttl-session "0.3.2"]
                  [markdown-clj "1.0.1"]
-                 [metosin/compojure-api "2.0.0-alpha12"]
-                 [metosin/muuntaja "0.3.2"]
+                 [metosin/compojure-api "2.0.0-alpha12"
+                  :exclusions [cheshire]]
+                 [metosin/muuntaja "0.3.2" :exclusions [com.fasterxml.jackson.core/jackson-core]]
                  [metosin/ring-http-response "0.9.0"]
                  [mount "0.1.11"]
-                 [org.clojure/clojure "1.8.0"]
+                 [org.clojure/clojure "1.9.0-RC2"]
                  [org.clojure/clojurescript "1.9.946" :scope "provided"]
                  [org.clojure/tools.cli "0.3.5"]
                  [org.clojure/tools.logging "0.4.0"]
@@ -27,14 +30,14 @@
                  [org.webjars/bootstrap "4.0.0-alpha.5"]
                  [org.webjars/font-awesome "4.7.0"]
                  [re-frame "0.10.2"]
-                 [day8.re-frame/http-fx "0.1.4"]
+                 [day8.re-frame/http-fx "0.1.4" :exclusions [com.fasterxml.jackson.core/jackson-core]]
                  [reagent "0.7.0"]
                  [reagent-utils "0.2.1"]
                  [ring-webjars "0.2.0"]
                  [ring/ring-core "1.6.3"]
                  [ring/ring-defaults "0.3.1"]
                  [secretary "1.2.3"]
-                 [selmer "1.11.2"]
+                 [selmer "1.11.2" :exclusions [com.fasterxml.jackson.core/jackson-core]]
                  [redis.clients/jedis "2.9.0"]
                  [com.amazonaws/aws-java-sdk-bundle "1.11.229"]
                  ]
@@ -71,6 +74,12 @@
                 :compiler
                 {:output-to "target/cljsbuild/public/js/app.js"
                  :optimizations :advanced
+                 :install-deps true
+                 :npm-deps {
+                            ;:react-grid-layout "0.16.0"
+                            ;                                 :react "15.6.1"
+                            ;                                 :react-dom "15.6.1"
+                            }
                  :pretty-print false
                  :closure-warnings
                  {:externs-validation :off :non-standard-jsdoc :off}
@@ -91,7 +100,7 @@
                                  [binaryage/devtools "0.9.7"]
                                  [com.cemerick/piggieback "0.2.2"]
                                  [doo "0.1.8"]
-                                 [figwheel-sidecar "0.5.14"]]
+                                 [figwheel-sidecar "0.5.14"  :exclusions [org.clojure/tools.nrepl org.clojure/core.async]]]
                   :plugins      [[com.jakemccrary/lein-test-refresh "0.19.0"]
                                  [lein-doo "0.1.8"]
                                  [lein-figwheel "0.5.14"]
@@ -108,6 +117,12 @@
                       :output-dir "target/cljsbuild/public/js/out"
                       :source-map true
                       :optimizations :none
+                      :install-deps true
+                      :npm-deps {
+                                 ;:react-grid-layout "0.16.0"
+                                 ;                                 :react "15.6.1"
+                                 ;                                 :react-dom "15.6.1"
+                                 }
                       :pretty-print true}}}}
                   
                   
@@ -127,6 +142,12 @@
                      {:output-to "target/test.js"
                       :main "edw.doo-runner"
                       :optimizations :whitespace
+                      :install-deps true
+                      :npm-deps {
+                                 ; :react-grid-layout "0.16.0"
+                                 ;                                 :react "15.6.1"
+                                 ;                                 :react-dom "15.6.1"
+                                 }
                       :pretty-print true}}}}
                   
                   }

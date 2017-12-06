@@ -43,20 +43,23 @@
     )
   )
 
-(defn items-list [options key-prefix]
+(defn items-list [options key-prefix click-callback]
   (let [items
         (vec
           (map-indexed
             (fn [index item]
               (let [comp-key (str key-prefix "-" index)]
                 [:div.col-sm-12
-                 [raw-textbox {:key comp-key} item]
+                 {
+                  :on-click (fn [] (when (some? click-callback) (click-callback item)))
+                  }
+                 [raw-textbox {:class (if (even? index) "alternate-a" "alternate-b") :key comp-key} item]
                  ]
                 )
               )
             options)
           )
         ]
-    (into [:div] items)
+    (into [:div] (interpose [:div [:hr]] items))
     )
   )

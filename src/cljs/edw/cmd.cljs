@@ -13,35 +13,35 @@
         cmd-type (if cmd-type0 cmd-type0 (first common-utils/cmd-types))
         output (if-let [loading? (:loading? cmd)] "loading..." (str (:result cmd)))
         scripts (:scripts cmd)
+        set-script (fn [text] (rf/dispatch [:update-value [:cmd :script cmd-type] text]))
         ]
-    [:div.container
-     [:div.row
-      [:div.col-sm-12
-       [:select
-        {:value cmd-type
-         :on-change #(rf/dispatch [:update-value [:cmd :cmd-type] (-> % .-target .-value)])
-         }
-        (map-indexed (fn [idx val] [:option {:key (str "_cmd_t_" idx)} val]) common-utils/cmd-types)]
-       [:button.btn.btn-default.btn-sm
-        {:type "button" :on-click #(rf/dispatch [:execute-cmd])} "Run"]
-       "Search script:"[ui/text-input :search-scripts nil "text" (:search-string cmd) true nil]
-       ]]
-
-     (when (pos? (count scripts))
-       [:div.row
-        [ui/items-list scripts "scripts"]
-        ]
-       )
-
-     [:div.row
-      [:div.col-sm-12
-       [ui/textarea-input :update-value [[:cmd :script cmd-type]] (get-in cmd [:script cmd-type]) {:rows 10 :cols 50}]
-       ]
+    [:section
+     [:div.col-sm-12
+      [:select
+       {:value cmd-type
+        :on-change #(rf/dispatch [:update-value [:cmd :cmd-type] (-> % .-target .-value)])
+        }
+       (map-indexed (fn [idx val] [:option {:key (str "_cmd_t_" idx)} val]) common-utils/cmd-types)]
+      [:button.btn.btn-default.btn-sm
+       {:type "button" :on-click #(rf/dispatch [:execute-cmd])} "Run"]
+      "Search script:"[ui/text-input :search-scripts nil "text" (:search-string cmd) true nil]
       ]
 
-     [:div.row
-      [:div.col-sm-12
-       [ui/raw-textbox nil output]
+     (when (pos? (count scripts))
+       [ui/items-list scripts "scripts" set-script]
+       )
+
+     [:div.container
+      [:div.row
+       [:div.col-sm-12
+        [ui/textarea-input :update-value [[:cmd :script cmd-type]] (get-in cmd [:script cmd-type]) {:rows 10 :cols 50}]
+        ]
+       ]
+
+      [:div.row
+       [:div.col-sm-12
+        [ui/raw-textbox nil output]
+        ]
        ]
       ]
      ]
