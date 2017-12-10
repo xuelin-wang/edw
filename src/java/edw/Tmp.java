@@ -7,6 +7,8 @@ import com.amazonaws.services.cloudfront.model.GetDistributionConfigRequest;
 import com.amazonaws.services.cloudfront.model.GetDistributionConfigResult;
 import com.amazonaws.services.cloudfront.model.ListDistributionsRequest;
 import com.amazonaws.services.cloudfront.model.ListDistributionsResult;
+import com.amazonaws.services.cloudfront.model.ListTagsForResourceRequest;
+import com.amazonaws.services.cloudfront.model.ListTagsForResourceResult;
 import com.amazonaws.services.elasticmapreduce.AmazonElasticMapReduce;
 import com.amazonaws.services.elasticmapreduce.model.ClusterSummary;
 import com.amazonaws.services.identitymanagement.AmazonIdentityManagement;
@@ -35,6 +37,8 @@ import com.amazonaws.services.identitymanagement.model.ListUserPoliciesResult;
 import com.amazonaws.services.identitymanagement.model.SimulatePrincipalPolicyRequest;
 import com.amazonaws.services.identitymanagement.model.SimulatePrincipalPolicyResult;
 import com.amazonaws.services.identitymanagement.model.User;
+import com.amazonaws.services.lambda.AWSLambda;
+import com.amazonaws.services.lambda.model.FunctionConfiguration;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AccessControlList;
 import com.amazonaws.services.s3.model.Bucket;
@@ -177,21 +181,33 @@ public class Tmp {
 //            System.out.println("there");
 //        }
 
-        AmazonCloudFront service = AwsApiGateway.getAmazonCloudFront(null, null);
+//        AmazonCloudFront service = AwsApiGateway.getAmazonCloudFront(null, null);
+//        ListDistributionsRequest listDistributionsRequest = new ListDistributionsRequest();
+//        ListDistributionsResult listDistributionsResult = service.listDistributions(listDistributionsRequest);
+//
+//        for (DistributionSummary distributionSummary: listDistributionsResult.getDistributionList().getItems()) {
+//            distributionSummary.getOrigins();
+//            GetDistributionConfigRequest getDistributionConfigRequest = new GetDistributionConfigRequest();
+//            getDistributionConfigRequest.setId(distributionSummary.getId());
+//            ListTagsForResourceRequest listTagsForResourceRequest = new ListTagsForResourceRequest();
+//            listTagsForResourceRequest.setResource(distributionSummary.getARN());
+//            ListTagsForResourceResult listTagsForResourceResult = service.listTagsForResource(listTagsForResourceRequest);
+//            System.out.println("there");
+//
+//        }
+
+        AWSLambda service = AwsApiGateway.getAWSLambda(null, null);
         ListDistributionsRequest listDistributionsRequest = new ListDistributionsRequest();
-        ListDistributionsResult listDistributionsResult = service.listDistributions(listDistributionsRequest);
+        List<FunctionConfiguration> functionConfigs = service.listFunctions().getFunctions();
 
-//        service.getCloudFrontOriginAccessIdentity()
-        for (DistributionSummary distributionSummary: listDistributionsResult.getDistributionList().getItems()) {
-            distributionSummary.getOrigins();
-            GetDistributionConfigRequest getDistributionConfigRequest = new GetDistributionConfigRequest();
-            getDistributionConfigRequest.setId(distributionSummary.getId());
+        for (FunctionConfiguration item: functionConfigs) {
 
-//            GetDistributionConfigResult getDistributionConfigResult = service.getDistributionConfig(getDistributionConfigRequest);
-//            DistributionConfig distributionConfig = getDistributionConfigResult.getDistributionConfig();
-//            System.out.println(getDistributionConfigResult.getDistributionConfig());
+
+
+            System.out.println("there");
 
         }
+
         System.out.println("here");
     }
 

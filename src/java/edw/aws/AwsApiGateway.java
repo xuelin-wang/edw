@@ -16,6 +16,9 @@ import com.amazonaws.services.elasticmapreduce.AmazonElasticMapReduce;
 import com.amazonaws.services.elasticmapreduce.AmazonElasticMapReduceClientBuilder;
 import com.amazonaws.services.identitymanagement.AmazonIdentityManagement;
 import com.amazonaws.services.identitymanagement.AmazonIdentityManagementClientBuilder;
+import com.amazonaws.services.lambda.AWSLambda;
+import com.amazonaws.services.lambda.AWSLambdaClient;
+import com.amazonaws.services.lambda.AWSLambdaClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
@@ -164,6 +167,21 @@ public class AwsApiGateway {
                 .build();
 
         regionProfileToService.put(toCacheKey(region, profileName, AmazonCloudFront.class.getName()), service);
+        return service;
+    }
+
+    public static synchronized AWSLambda getAWSLambda(String region, String profileName) {
+        AWSLambda service = getCachedService(region, profileName, AWSLambda.class);
+        if (service != null) {
+            return service;
+        }
+
+        service = AWSLambdaClientBuilder.standard()
+                .withRegion(getRegionName(region))
+                .withCredentials(getAWSCredentialsProvider(profileName))
+                .build();
+
+        regionProfileToService.put(toCacheKey(region, profileName, AWSLambda.class.getName()), service);
         return service;
     }
 }

@@ -15,35 +15,41 @@
         scripts (:scripts cmd)
         set-script (fn [text] (rf/dispatch [:update-value [:cmd :script cmd-type] text]))
         ]
-    [:section
-     [:div.col-sm-12
-      [:select
-       {:value cmd-type
-        :on-change #(rf/dispatch [:update-value [:cmd :cmd-type] (-> % .-target .-value)])
-        }
-       (map-indexed (fn [idx val] [:option {:key (str "_cmd_t_" idx)} val]) common-utils/cmd-types)]
-      [:button.btn.btn-default.btn-sm
-       {:type "button" :on-click #(rf/dispatch [:execute-cmd])} "Run"]
-      "Search script:"[ui/text-input :search-scripts nil "text" (:search-string cmd) true nil]
+    [:div.container
+     [:nav.level
+      [:div.level-left
+       [:div.level-item
+        [:select
+         {:value cmd-type
+          :on-change #(rf/dispatch [:update-value [:cmd :cmd-type] (-> % .-target .-value)])
+          }
+         (map-indexed (fn [idx val] [:option {:key (str "_cmd_t_" idx)} val]) common-utils/cmd-types)]
+        ]
+       [:div.level-item
+        [:button.button
+         {:on-click #(rf/dispatch [:execute-cmd])} "Run"]
+        ]
+       ]
+
+      [:div.level-right
+       [:div.level-item "Searh script: "]
+       [:div.level-item
+        [ui/text-input :search-scripts nil "text" (:search-string cmd) true nil]
+        ]
+       ]
       ]
 
      (when (pos? (count scripts))
        [ui/items-list scripts "scripts" set-script]
        )
 
-     [:div.container
-      [:div.row
-       [:div.col-sm-12
-        [ui/textarea-input :update-value [[:cmd :script cmd-type]] (get-in cmd [:script cmd-type]) {:rows 10 :cols 50}]
-        ]
-       ]
-
-      [:div.row
-       [:div.col-sm-12
-        [ui/raw-textbox nil output]
-        ]
-       ]
+     [:div
+      [ui/textarea-input :update-value [[:cmd :script cmd-type]] (get-in cmd [:script cmd-type]) {:rows 10 :cols 50}]
       ]
+
+      [:div
+       [ui/raw-textbox nil output]
+       ]
      ]
     )
 )

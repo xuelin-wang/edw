@@ -49,7 +49,7 @@
           (map-indexed
             (fn [index item]
               (let [comp-key (str key-prefix "-" index)]
-                [:div.col-sm-12
+                [:div
                  {
                   :on-click (fn [] (when (some? click-callback) (click-callback item)))
                   }
@@ -60,6 +60,6 @@
             options)
           )
         ]
-    (into [:div] (interpose [:div [:hr]] items))
+    (into [:div.container] (interpose [:div [:hr]] items))
     )
   )

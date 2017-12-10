@@ -14,24 +14,38 @@
 
 (defn nav-link [uri title page collapsed?]
   (let [selected-page (rf/subscribe [:page])]
-    [:li.nav-item
-     {:class (when (= page @selected-page) "active")}
-     [:a.nav-link
-      {:href uri
-       :on-click #(reset! collapsed? true)} title]]))
+    [:a.navbar-item
+     {:class (when (= page @selected-page) "is-active")
+      :href uri
+      :on-click #(reset! collapsed? true)}
+     title
+     ]
+    ))
+
 
 (defn navbar []
   (r/with-let [collapsed? (r/atom true)]
-    [:nav.navbar.navbar-dark.bg-primary
-     [:button.navbar-toggler.hidden-sm-up
-      {:on-click #(swap! collapsed? not)} "☰"]
-     [:div.collapse.navbar-toggleable-xs
-      (when-not @collapsed? {:class "in"})
-      [:ul.nav.navbar-nav
-       [nav-link "#/" "Home" :home collapsed?]
-       [nav-link "#/cmd" "Command" :cmd collapsed?]
-       [nav-link "#/dashboard" "Dashboard" :cmd collapsed?]
-       [nav-link "#/about" "About" :about collapsed?]]]]))
+    [:nav.navbar {:role "navigation" :aria-label "main navigation"}
+
+     [:button.button.navbar-burger
+      {:on-click #(swap! collapsed? not)}
+      [:span]
+      [:span]
+      [:span]
+      ]
+
+    [:div.navbar-brand
+     [nav-link "#/" "Home" :home collapsed?]
+     [nav-link "#/cmd" "Command" :cmd collapsed?]
+     [nav-link "#/dashboard" "Dashboard" :dashboard collapsed?]
+     [nav-link "#/about" "About" :about collapsed?]
+
+     ]
+     ]
+  ))
+
+
+
 
 (defn img-page []
   [:div.container
