@@ -1,5 +1,8 @@
 # edw
 
+### TODO
+* d3 and cljjsjs d3
+* scripts search results pagination
 ### Summary
 Goal is to improve development efficiency.
 * Certain things are easier to be done in a html page.
