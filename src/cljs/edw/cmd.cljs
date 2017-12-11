@@ -36,8 +36,13 @@
        [:div.level-item
         [ui/text-input :search-scripts nil "text" (:search-string cmd) true nil]
         ]
+       [:div.level-item
+        [:button.button
+         {:on-click #(rf/dispatch [:search-scripts ""])}
+         "Clear" ]
+         ]
+        ]
        ]
-      ]
 
      (when (pos? (count scripts))
        [ui/items-list scripts "scripts" set-script]

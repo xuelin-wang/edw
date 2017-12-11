@@ -1,8 +1,10 @@
 # edw
 
 ### TODO
-* d3 and cljjsjs d3
-* scripts search results pagination
+* pretty print json output of scripts
+* aws scripts in clojure: creating/deleting/checking signatures scripts
+* caching aws function calls
+
 ### Summary
 Goal is to improve development efficiency.
 * Certain things are easier to be done in a html page.

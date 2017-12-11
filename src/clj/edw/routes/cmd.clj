@@ -29,7 +29,8 @@
        (if true
          (let [cmd-type (get param "cmd-type")
                pattern (get param "pattern")
-               results (executors/search-scripts cmd-type pattern)
+               max-return (get param "max-return")
+               results (executors/search-scripts cmd-type pattern (int (or max-return "15")))
                results-str (json/generate-string results)]
            (response/ok results-str))
          (response/ok {:data permission-denied}))))

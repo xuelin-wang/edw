@@ -2,6 +2,7 @@
   (:require [edw.db :as db]
             [ajax.core :as ajax]
             [day8.re-frame.http-fx]
+            [clojure.string :as str]
             [re-frame.core :refer [dispatch reg-event-db reg-event-fx reg-sub]]))
 
 ;;dispatchers
@@ -81,24 +82,32 @@
 (reg-event-fx
   :search-scripts
   []
-  (fn [{:keys [db]} [_ search-string]]
-    (println (str "search-string: " search-string))
+  (fn [{:keys [db]} [_ input-search-string]]
+
     (let [cmd (:cmd db)
+          search-string (str/trim input-search-string)
           cmd-type (or (:cmd-type cmd) "bash")
-          params {:cmd-type cmd-type :pattern search-string}]
-      {
-       :http-xhrio {:method          :post
-                    :uri             "/cmdSearchScripts"
-                    :timeout         8000
-                    :response-format (ajax/json-response-format {:keywords? true})
+          params {:cmd-type cmd-type :pattern search-string :max-return 15}]
+      (if (str/blank? search-string)
+        {:db
+         (-> db
+             (assoc-in [:cmd :scripts] [])
+             (assoc-in [:cmd :search-string] search-string)
+             )
+         }
+        {
+         :http-xhrio {:method          :post
+                      :uri             "/cmdSearchScripts"
+                      :timeout         8000
+                      :response-format (ajax/json-response-format {:keywords? true})
 
-                    :format           (ajax/url-request-format)
-                    :params         {:p (clj->url-encoded-json params)}
+                      :format           (ajax/url-request-format)
+                      :params         {:p (clj->url-encoded-json params)}
 
-                    :on-success      [:process-cmd-search-response]
-                    :on-failure      [:process-cmd-search-response]}
-       :db (assoc-in db [:cmd :search-string] search-string)}
-
+                      :on-success      [:process-cmd-search-response]
+                      :on-failure      [:process-cmd-search-response]}
+         :db (assoc-in db [:cmd :search-string] search-string)}
+        )
       )
     )
   )

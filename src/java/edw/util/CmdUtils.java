@@ -41,7 +41,7 @@ public class CmdUtils {
         return runnable;
     }
 
-    public static String[] executeBash(String[] command, String dir, Map<String,String> env, int maxResultLen)
+    public static String[] execute(String[] command, String dir, Map<String,String> env, int maxResultLen)
     {
         ProcessBuilder pb = new ProcessBuilder(command);
         if (dir != null) {
