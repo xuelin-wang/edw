@@ -39,10 +39,15 @@ import com.amazonaws.services.identitymanagement.model.SimulatePrincipalPolicyRe
 import com.amazonaws.services.identitymanagement.model.User;
 import com.amazonaws.services.lambda.AWSLambda;
 import com.amazonaws.services.lambda.model.FunctionConfiguration;
+import com.amazonaws.services.rds.AmazonRDS;
+import com.amazonaws.services.rds.model.DBInstance;
+import com.amazonaws.services.rds.model.DescribeDBInstancesResult;
+import com.amazonaws.services.rds.model.DescribeEventSubscriptionsResult;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AccessControlList;
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.Grant;
+import com.amazonaws.util.json.Jackson;
 import edw.aws.AwsApiGateway;
 
 import java.util.Arrays;
@@ -195,19 +200,29 @@ public class Tmp {
 //            System.out.println("there");
 //
 //        }
+//
+//        AWSLambda service = AwsApiGateway.getAWSLambda(null, null);
+//        ListDistributionsRequest listDistributionsRequest = new ListDistributionsRequest();
+//        List<FunctionConfiguration> functionConfigs = service.listFunctions().getFunctions();
+//
+//        for (FunctionConfiguration item: functionConfigs) {
+//
+//
+//
+//            System.out.println("there");
+//
+//        }
+//
 
-        AWSLambda service = AwsApiGateway.getAWSLambda(null, null);
-        ListDistributionsRequest listDistributionsRequest = new ListDistributionsRequest();
-        List<FunctionConfiguration> functionConfigs = service.listFunctions().getFunctions();
 
-        for (FunctionConfiguration item: functionConfigs) {
-
-
-
-            System.out.println("there");
-
+        AmazonRDS service = AwsApiGateway.getAmazonRDS("us-east-2", null);
+        DescribeDBInstancesResult describeDBInstancesResult = service.describeDBInstances();
+        for (DBInstance dbInstance: describeDBInstancesResult.getDBInstances()) {
+            String str = Jackson.toJsonPrettyString(dbInstance);
+            System.out.println(str);
         }
 
+        DescribeEventSubscriptionsResult describeEventSubscriptionsResult = service.describeEventSubscriptions();
         System.out.println("here");
     }
 

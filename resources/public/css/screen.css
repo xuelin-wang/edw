@@ -83,4 +83,8 @@ body {
 .alternate-b:hover {
     background-color: blue;
 }
+.prewrap {
+    white-space: pre-wrap;
+}
+
 

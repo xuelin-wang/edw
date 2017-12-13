@@ -2,6 +2,7 @@
   (:require
     [clojure.string :as str]
     [edw.redis :as r]
+    [cheshire.core :as json]
     [edw.common-utils])
   (:import [edw.util CmdUtils]
            (redis.clients.jedis ScanParams)))
@@ -16,6 +17,13 @@
      :output (aget exitOutputError 1)
      :error (aget exitOutputError 2)}
     ))
+
+(defn to-pretty-json [obj]
+  (let [ss (str obj)
+        json-obj (json/parse-string ss)]
+    (json/generate-string json-obj {:pretty true})
+    )
+  )
 
 (defn- execute-clj [script]
   (print (str "script is: " script))

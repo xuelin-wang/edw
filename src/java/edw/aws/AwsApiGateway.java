@@ -19,8 +19,11 @@ import com.amazonaws.services.identitymanagement.AmazonIdentityManagementClientB
 import com.amazonaws.services.lambda.AWSLambda;
 import com.amazonaws.services.lambda.AWSLambdaClient;
 import com.amazonaws.services.lambda.AWSLambdaClientBuilder;
+import com.amazonaws.services.rds.AmazonRDS;
+import com.amazonaws.services.rds.AmazonRDSClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.util.json.Jackson;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,6 +56,18 @@ public class AwsApiGateway {
         return (T)regionProfileToService.get(toCacheKey(region, profileName, clazz.getName()));
     }
 
+    private static <T> void putCachedService(String region, String profileName, Class<T> clazz, T service) {
+        regionProfileToService.put(toCacheKey(region, profileName, clazz.getName()), service);
+    }
+
+    public static String toJsonPrettyString(Object awsObj) {
+        return Jackson.toJsonPrettyString(awsObj);
+    }
+
+    public static String toJsonString(Object awsObj) {
+        return Jackson.toJsonString(awsObj);
+    }
+
     public static synchronized AmazonDynamoDB getAmazonDynamoDB(String region, String profileName) {
         AmazonDynamoDB service = getCachedService(region, profileName, AmazonDynamoDB.class);
         if (service != null) {
@@ -64,7 +79,7 @@ public class AwsApiGateway {
                 .withCredentials(getAWSCredentialsProvider(profileName))
                 .build();
 
-        regionProfileToService.put(toCacheKey(region, profileName, AmazonDynamoDB.class.getName()), service);
+        putCachedService(region, profileName, AmazonDynamoDB.class, service);
         return service;
     }
 
@@ -79,7 +94,7 @@ public class AwsApiGateway {
                 .withCredentials(getAWSCredentialsProvider(profileName))
                 .build();
 
-        regionProfileToService.put(toCacheKey(region, profileName, AmazonConfig.class.getName()), service);
+        putCachedService(region, profileName, AmazonConfig.class, service);
         return service;
     }
 
@@ -94,7 +109,7 @@ public class AwsApiGateway {
                 .withCredentials(getAWSCredentialsProvider(profileName))
                 .build();
 
-        regionProfileToService.put(toCacheKey(region, profileName, AWSCloudTrail.class.getName()), service);
+        putCachedService(region, profileName, AWSCloudTrail.class, service);
         return service;
     }
 
@@ -109,7 +124,7 @@ public class AwsApiGateway {
                 .withCredentials(getAWSCredentialsProvider(profileName))
                 .build();
 
-        regionProfileToService.put(toCacheKey(region, profileName, AmazonS3.class.getName()), service);
+        putCachedService(region, profileName, AmazonS3.class, service);
         return service;
     }
 
@@ -124,7 +139,7 @@ public class AwsApiGateway {
                 .withCredentials(getAWSCredentialsProvider(profileName))
                 .build();
 
-        regionProfileToService.put(toCacheKey(region, profileName, AmazonElasticMapReduce.class.getName()), service);
+        putCachedService(region, profileName, AmazonElasticMapReduce.class, service);
         return service;
     }
 
@@ -151,7 +166,7 @@ public class AwsApiGateway {
                 .withCredentials(getAWSCredentialsProvider(profileName))
                 .build();
 
-        regionProfileToService.put(toCacheKey(region, profileName, AmazonIdentityManagement.class.getName()), service);
+        putCachedService(region, profileName, AmazonIdentityManagement.class, service);
         return service;
     }
 
@@ -166,7 +181,7 @@ public class AwsApiGateway {
                 .withCredentials(getAWSCredentialsProvider(profileName))
                 .build();
 
-        regionProfileToService.put(toCacheKey(region, profileName, AmazonCloudFront.class.getName()), service);
+        putCachedService(region, profileName, AmazonCloudFront.class, service);
         return service;
     }
 
@@ -181,7 +196,22 @@ public class AwsApiGateway {
                 .withCredentials(getAWSCredentialsProvider(profileName))
                 .build();
 
-        regionProfileToService.put(toCacheKey(region, profileName, AWSLambda.class.getName()), service);
+        putCachedService(region, profileName, AWSLambda.class, service);
+        return service;
+    }
+
+    public static synchronized AmazonRDS getAmazonRDS(String region, String profileName) {
+        AmazonRDS service = getCachedService("", profileName, AmazonRDS.class);
+        if (service != null) {
+            return service;
+        }
+
+        service = AmazonRDSClientBuilder.standard()
+                .withRegion(getRegionName(region))
+                .withCredentials(getAWSCredentialsProvider(profileName))
+                .build();
+
+        putCachedService(region, profileName, AmazonRDS.class, service);
         return service;
     }
 }

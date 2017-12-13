@@ -87,7 +87,7 @@
     (let [cmd (:cmd db)
           search-string (str/trim input-search-string)
           cmd-type (or (:cmd-type cmd) "bash")
-          params {:cmd-type cmd-type :pattern search-string :max-return 15}]
+          params {:cmd-type cmd-type :pattern search-string :max-return 50}]
       (if (str/blank? search-string)
         {:db
          (-> db
