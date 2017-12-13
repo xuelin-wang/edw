@@ -3,6 +3,9 @@
 ### TODO
 * aws scripts in clojure: creating/deleting/checking signatures scripts
 * caching aws function calls
+* application dashboard: monitoring health of system
+* Kafka Stream play
+* this webapp deploy to aws instance and secure
 
 ### Summary
 * store, search, execute bash, aws, python scripts at server
@@ -42,6 +45,8 @@ http://localhost:3123
 
 #### Build
 ``` bash
+lein clean
+lein cljsbuild once
 lein uberjar
 ```
 
