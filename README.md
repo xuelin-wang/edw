@@ -1,12 +1,14 @@
 # edw
 
 ### TODO
-* pretty print json output of scripts
 * aws scripts in clojure: creating/deleting/checking signatures scripts
 * caching aws function calls
 
 ### Summary
-Goal is to improve development efficiency.
+* store, search, execute bash, aws, python scripts at server
+
+### Goal
+To improve development efficiency.
 * Certain things are easier to be done in a html page.
 * AWS API playground
 * Ideas playground
@@ -25,6 +27,9 @@ are generated under .aws.
 * download lein and ensure it's executable and in your path:
  https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
 
+#### Redis
+#### JDK
+#### Python
 #### Run Locally
 ``` bash
 # from your project home
@@ -32,7 +37,7 @@ lein run
 # in another terminal, from your project home
 lein figwheel
 # from browser
-http://localhost:3000
+http://localhost:3123
 ```
 
 #### Build
