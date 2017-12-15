@@ -11,7 +11,14 @@ import com.amazonaws.services.cloudfront.model.ListTagsForResourceRequest;
 import com.amazonaws.services.cloudfront.model.ListTagsForResourceResult;
 import com.amazonaws.services.elasticmapreduce.AmazonElasticMapReduce;
 import com.amazonaws.services.elasticmapreduce.model.ClusterSummary;
+import com.amazonaws.services.elasticsearch.AWSElasticsearch;
+import com.amazonaws.services.elasticsearch.model.DescribeElasticsearchDomainConfigRequest;
+import com.amazonaws.services.elasticsearch.model.DescribeElasticsearchDomainConfigResult;
+import com.amazonaws.services.elasticsearch.model.DomainInfo;
+import com.amazonaws.services.elasticsearch.model.ListDomainNamesRequest;
+import com.amazonaws.services.elasticsearch.model.ListDomainNamesResult;
 import com.amazonaws.services.identitymanagement.AmazonIdentityManagement;
+import com.amazonaws.services.identitymanagement.AmazonIdentityManagementClientBuilder;
 import com.amazonaws.services.identitymanagement.model.AccessKeyMetadata;
 import com.amazonaws.services.identitymanagement.model.AttachedPolicy;
 import com.amazonaws.services.identitymanagement.model.GetAccessKeyLastUsedRequest;
@@ -22,6 +29,8 @@ import com.amazonaws.services.identitymanagement.model.GetPolicyVersionRequest;
 import com.amazonaws.services.identitymanagement.model.GetPolicyVersionResult;
 import com.amazonaws.services.identitymanagement.model.GetUserPolicyRequest;
 import com.amazonaws.services.identitymanagement.model.GetUserPolicyResult;
+import com.amazonaws.services.identitymanagement.model.GetUserRequest;
+import com.amazonaws.services.identitymanagement.model.GetUserResult;
 import com.amazonaws.services.identitymanagement.model.Group;
 import com.amazonaws.services.identitymanagement.model.ListAccessKeysRequest;
 import com.amazonaws.services.identitymanagement.model.ListAttachedGroupPoliciesRequest;
@@ -47,16 +56,20 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AccessControlList;
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.Grant;
+import com.amazonaws.services.securitytoken.AWSSecurityTokenService;
+import com.amazonaws.services.securitytoken.model.AssumeRoleRequest;
+import com.amazonaws.services.securitytoken.model.AssumeRoleResult;
 import com.amazonaws.util.json.Jackson;
 import edw.aws.AwsApiGateway;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class Tmp {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 
 //        AmazonDynamoDB ddb = AwsApiGateway.getAmazonDynamoDB(null);
 //
@@ -106,6 +119,7 @@ public class Tmp {
 //        }
 
 //        AmazonIdentityManagement service = AwsApiGateway.getAmazonIdentityManagement(null, null);
+//
 //        List<User> users = service.listUsers().getUsers();
 //        List<String> actionNames = Arrays.asList("s3:DeleteBucket");
 //        List<String> resourceArns = Arrays.asList("*");
@@ -168,8 +182,8 @@ public class Tmp {
 //                }
 //
 //            }
-
-
+//
+//
 //            ListAccessKeysRequest listReq = new ListAccessKeysRequest();
 //            listReq.setUserName(user.getUserName());
 //            List<AccessKeyMetadata> keyMetadatas = service.listAccessKeys(listReq).getAccessKeyMetadata();
@@ -215,14 +229,46 @@ public class Tmp {
 //
 
 
-        AmazonRDS service = AwsApiGateway.getAmazonRDS("us-east-2", null);
-        DescribeDBInstancesResult describeDBInstancesResult = service.describeDBInstances();
-        for (DBInstance dbInstance: describeDBInstancesResult.getDBInstances()) {
-            String str = Jackson.toJsonPrettyString(dbInstance);
-            System.out.println(str);
+//        AmazonRDS service = AwsApiGateway.getAmazonRDS("us-east-2", null);
+//        DescribeDBInstancesResult describeDBInstancesResult = service.describeDBInstances();
+//        for (DBInstance dbInstance: describeDBInstancesResult.getDBInstances()) {
+//            String str = Jackson.toJsonPrettyString(dbInstance);
+//            System.out.println(str);
+//        }
+
+//        AWSElasticsearch service = AwsApiGateway.getAWSElasticsearch(null, null);
+//        ListDomainNamesResult listDomainNamesResult = service.listDomainNames(new ListDomainNamesRequest());
+//        for (DomainInfo domainInfo: listDomainNamesResult.getDomainNames()) {
+//            DescribeElasticsearchDomainConfigRequest describeElasticsearchDomainConfigRequest = new DescribeElasticsearchDomainConfigRequest();
+//            describeElasticsearchDomainConfigRequest.setDomainName(domainInfo.getDomainName());
+//            DescribeElasticsearchDomainConfigResult result = service.describeElasticsearchDomainConfig(describeElasticsearchDomainConfigRequest);
+//            String str = Jackson.toJsonPrettyString(result);
+//            System.out.println(str);
+//        }
+
+//        AWSSecurityTokenService sts = AwsApiGateway.getAAWSSecurityTokenServiceh(null, null);
+//        AssumeRoleRequest assumeRoleRequest = new AssumeRoleRequest();
+//        assumeRoleRequest.setDurationSeconds(3600);
+//        assumeRoleRequest.setRoleSessionName("xwangTest");
+//        assumeRoleRequest.setExternalId("xuelinwangdevinsecure");
+//        assumeRoleRequest.setRoleArn("arn:aws:iam::551164845140:role/xuelinwang");
+//
+//        AssumeRoleResult assumeRoleResult = sts.assumeRole(assumeRoleRequest);
+
+
+        AmazonIdentityManagement amazonIdentityManagement = AwsApiGateway.getAWSService(null, null, AwsApiGateway.EXTERNAL_ID,
+                AwsApiGateway.ROLE_ARN, AmazonIdentityManagement.class);
+
+        List<User> users = amazonIdentityManagement.listUsers().getUsers();
+
+        for (User user: users) {
+            GetUserRequest getUserRequest = new GetUserRequest();
+            getUserRequest.setUserName(user.getUserName());
+            GetUserResult getUserResult = amazonIdentityManagement.getUser(getUserRequest);
+            System.out.println(Jackson.toJsonPrettyString(getUserResult));
         }
 
-        DescribeEventSubscriptionsResult describeEventSubscriptionsResult = service.describeEventSubscriptions();
+
         System.out.println("here");
     }
 

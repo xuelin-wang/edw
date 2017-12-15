@@ -43,7 +43,7 @@
                  [secretary "1.2.3"]
                  [selmer "1.11.2" :exclusions [com.fasterxml.jackson.core/jackson-core]]
                  [redis.clients/jedis "2.9.0"]
-                 [com.amazonaws/aws-java-sdk-bundle "1.11.229"]
+                 [com.amazonaws/aws-java-sdk-bundle "1.11.248"]
                  ]
 
   :min-lein-version "2.8.1"
