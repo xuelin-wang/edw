@@ -1,4 +1,4 @@
-package edw.aws;
+package edw.aws.api;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.STSAssumeRoleSessionCredentialsProvider;

@@ -63,3 +63,76 @@
     (into [:div.container] (interpose [:div [:hr]] items))
     )
   )
+
+(defn login [auth]
+  [:div.container
+   [:div.field
+    [:label.label "Email address: "]
+    [:div.control
+     [text-input :update-value [[:auth :user]] "text" (:user auth) false nil]
+     ]
+    ]
+
+   [:div.field
+    [:label.label "Password: "]
+    [:div.control
+     [text-input :update-value [[:auth :password]] "password" (:password auth) false nil]
+     ]
+    ]
+
+   [:div.field
+    [:div.control
+     [:button.button.is-link {:on-click #(rf/dispatch [:login])} "Login"]
+     ]
+    ]
+
+   [:p.is-danger (get-in auth [:login :error])
+    ]
+
+   [:div.field
+    "Don't have an account? please "
+    [:button.button.is-link
+     {:on-click #(rf/dispatch [:update-value [:auth :registering?] true])} "register"]
+    ]
+   ])
+
+(defn register [auth]
+  [:div.container
+   [:div.field
+    [:label.label "Email address: "]
+    [:div.control
+     [text-input :update-value [[:auth :user]] "text" (:user auth) false nil]
+     ]
+    ]
+
+   [:div.field
+    [:label.label "Password: "]
+    [:div.control
+     [text-input :update-value [[:auth :password]] "password" (:password auth) false nil]
+     ]
+    ]
+
+   [:div.field
+    [:label.label "Confirm Password: "]
+    [:div.control
+     [text-input :update-value [[:auth :confirm-password]] "password" (:confirm-password auth) false {:on-paste #(do)}]
+     ]
+    ]
+
+   [:div.field
+    [:div.control
+     [:button.button.is-link {:on-click #(rf/dispatch [:register])} "Register"]
+     ]
+    ]
+
+   [:p.is-danger (get-in auth [:register :error])
+    ]
+   [:p.is-success (get-in auth [:register :message])
+    ]
+
+   [:div.field
+    "Already have an account? please "
+    [:button.button.is-link
+     {:on-click #(rf/dispatch [:update-value [:auth :registering?] false])} "login"]
+    ]
+   ])

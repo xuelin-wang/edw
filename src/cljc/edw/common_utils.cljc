@@ -7,3 +7,9 @@
    })
 
 (def cmd-types (keys cmds))
+
+(def cmd-lists ["builtin" "executed"])
+
+(defn redis-script-key [script-type script-list]
+  (str "scripts/" script-type "/" script-list)
+  )

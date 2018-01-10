@@ -1,75 +1,36 @@
 package edw;
 
-import com.amazonaws.services.cloudfront.AmazonCloudFront;
-import com.amazonaws.services.cloudfront.model.DistributionConfig;
-import com.amazonaws.services.cloudfront.model.DistributionSummary;
-import com.amazonaws.services.cloudfront.model.GetDistributionConfigRequest;
-import com.amazonaws.services.cloudfront.model.GetDistributionConfigResult;
-import com.amazonaws.services.cloudfront.model.ListDistributionsRequest;
-import com.amazonaws.services.cloudfront.model.ListDistributionsResult;
-import com.amazonaws.services.cloudfront.model.ListTagsForResourceRequest;
-import com.amazonaws.services.cloudfront.model.ListTagsForResourceResult;
-import com.amazonaws.services.elasticmapreduce.AmazonElasticMapReduce;
-import com.amazonaws.services.elasticmapreduce.model.ClusterSummary;
-import com.amazonaws.services.elasticsearch.AWSElasticsearch;
-import com.amazonaws.services.elasticsearch.model.DescribeElasticsearchDomainConfigRequest;
-import com.amazonaws.services.elasticsearch.model.DescribeElasticsearchDomainConfigResult;
-import com.amazonaws.services.elasticsearch.model.DomainInfo;
-import com.amazonaws.services.elasticsearch.model.ListDomainNamesRequest;
-import com.amazonaws.services.elasticsearch.model.ListDomainNamesResult;
+import com.amazonaws.services.ec2.AmazonEC2;
+import com.amazonaws.services.ec2.model.DescribeSecurityGroupReferencesRequest;
+import com.amazonaws.services.ec2.model.DescribeSecurityGroupReferencesResult;
+import com.amazonaws.services.ec2.model.DescribeSecurityGroupsRequest;
+import com.amazonaws.services.ec2.model.DescribeSecurityGroupsResult;
+import com.amazonaws.services.ec2.model.SecurityGroup;
 import com.amazonaws.services.identitymanagement.AmazonIdentityManagement;
-import com.amazonaws.services.identitymanagement.AmazonIdentityManagementClientBuilder;
-import com.amazonaws.services.identitymanagement.model.AccessKeyMetadata;
 import com.amazonaws.services.identitymanagement.model.AttachedPolicy;
-import com.amazonaws.services.identitymanagement.model.GetAccessKeyLastUsedRequest;
-import com.amazonaws.services.identitymanagement.model.GetAccessKeyLastUsedResult;
 import com.amazonaws.services.identitymanagement.model.GetPolicyRequest;
 import com.amazonaws.services.identitymanagement.model.GetPolicyResult;
 import com.amazonaws.services.identitymanagement.model.GetPolicyVersionRequest;
 import com.amazonaws.services.identitymanagement.model.GetPolicyVersionResult;
 import com.amazonaws.services.identitymanagement.model.GetUserPolicyRequest;
 import com.amazonaws.services.identitymanagement.model.GetUserPolicyResult;
-import com.amazonaws.services.identitymanagement.model.GetUserRequest;
-import com.amazonaws.services.identitymanagement.model.GetUserResult;
-import com.amazonaws.services.identitymanagement.model.Group;
-import com.amazonaws.services.identitymanagement.model.ListAccessKeysRequest;
-import com.amazonaws.services.identitymanagement.model.ListAttachedGroupPoliciesRequest;
-import com.amazonaws.services.identitymanagement.model.ListAttachedGroupPoliciesResult;
-import com.amazonaws.services.identitymanagement.model.ListAttachedUserPoliciesRequest;
-import com.amazonaws.services.identitymanagement.model.ListAttachedUserPoliciesResult;
-import com.amazonaws.services.identitymanagement.model.ListGroupPoliciesRequest;
-import com.amazonaws.services.identitymanagement.model.ListGroupPoliciesResult;
-import com.amazonaws.services.identitymanagement.model.ListGroupsForUserRequest;
-import com.amazonaws.services.identitymanagement.model.ListGroupsForUserResult;
-import com.amazonaws.services.identitymanagement.model.ListUserPoliciesRequest;
-import com.amazonaws.services.identitymanagement.model.ListUserPoliciesResult;
-import com.amazonaws.services.identitymanagement.model.SimulatePrincipalPolicyRequest;
-import com.amazonaws.services.identitymanagement.model.SimulatePrincipalPolicyResult;
 import com.amazonaws.services.identitymanagement.model.User;
-import com.amazonaws.services.lambda.AWSLambda;
-import com.amazonaws.services.lambda.model.FunctionConfiguration;
-import com.amazonaws.services.rds.AmazonRDS;
-import com.amazonaws.services.rds.model.DBInstance;
-import com.amazonaws.services.rds.model.DescribeDBInstancesResult;
-import com.amazonaws.services.rds.model.DescribeEventSubscriptionsResult;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.AccessControlList;
-import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.Grant;
-import com.amazonaws.services.securitytoken.AWSSecurityTokenService;
-import com.amazonaws.services.securitytoken.model.AssumeRoleRequest;
-import com.amazonaws.services.securitytoken.model.AssumeRoleResult;
+import com.amazonaws.services.s3.model.Grantee;
+import com.amazonaws.services.s3.model.GroupGrantee;
+import com.amazonaws.services.s3.model.Permission;
 import com.amazonaws.util.json.Jackson;
-import edw.aws.AwsApiGateway;
+import edw.aws.api.AwsApiGateway;
+import edw.aws.batch.S3s;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Tmp {
-    public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InterruptedException {
 
 //        AmazonDynamoDB ddb = AwsApiGateway.getAmazonDynamoDB(null);
 //
@@ -87,6 +48,18 @@ public class Tmp {
 //            GetTrailStatusResult res = cloudTrail.getTrailStatus(req);
 //            boolean isLogging = res.isLogging();
 //        }
+
+        String region = "ca-central-1";
+//        AmazonS3 s3 = AwsApiGateway.getAWSService(null, "devinsecure", null,
+//                null, AmazonS3.class);
+//
+//        S3s.deleteBuckets("xwang.*", "us-east-2", s3);
+//        S3s.createAndWaitForBucket("xwang.test-script.authacp.3", "us-east-2",
+//                new Grant[]{
+//                    new Grant(GroupGrantee.AuthenticatedUsers, Permission.ReadAcp)
+//                },
+//                "xwang_bucket", "test-script", s3);
+
 
 //        Map<String, AmazonS3> servicesMap = AwsApiGateway.getAllAmazonS3s(null);
 //        AmazonS3 service = servicesMap.entrySet().iterator().next().getValue();
@@ -256,17 +229,158 @@ public class Tmp {
 //        AssumeRoleResult assumeRoleResult = sts.assumeRole(assumeRoleRequest);
 
 
-        AmazonIdentityManagement amazonIdentityManagement = AwsApiGateway.getAWSService(null, null, AwsApiGateway.EXTERNAL_ID,
-                AwsApiGateway.ROLE_ARN, AmazonIdentityManagement.class);
+//        AmazonEC2 amazonEC2 = AwsApiGateway.getAWSService("us-east-2", null, null, null, AmazonEC2.class);
+//
+//        DescribeSnapshotsRequest describeSnapshotsRequest = new DescribeSnapshotsRequest();
+//        describeSnapshotsRequest.setOwnerIds(Collections.singleton("self"));
+//        DescribeSnapshotsResult describeSnapshotsResult = amazonEC2.describeSnapshots(describeSnapshotsRequest);
+//
+//        String str = Jackson.toJsonPrettyString(describeSnapshotsResult);
 
-        List<User> users = amazonIdentityManagement.listUsers().getUsers();
+//        AmazonRDS amazonRDS = AwsApiGateway.getAWSService("ca-central-1", null, "xwangEvidentQA", "arn:aws:iam::949130717509:role/xwangDevInsecureRole", AmazonRDS.class);
+//        AmazonRDS amazonRDS = AwsApiGateway.getAWSService("us-east-1", "evidentiodev", null, null, AmazonRDS.class);
 
-        for (User user: users) {
-            GetUserRequest getUserRequest = new GetUserRequest();
-            getUserRequest.setUserName(user.getUserName());
-            GetUserResult getUserResult = amazonIdentityManagement.getUser(getUserRequest);
-            System.out.println(Jackson.toJsonPrettyString(getUserResult));
+//
+
+
+
+
+        AmazonEC2 amazonEC2 = AwsApiGateway.getAWSService("ca-central-1", "evidentqa", null, null, AmazonEC2.class);
+
+        DescribeSecurityGroupsRequest describeSecurityGroupsRequest = new DescribeSecurityGroupsRequest();
+        DescribeSecurityGroupsResult describeSecurityGroupsResult =  amazonEC2.describeSecurityGroups();
+        List<SecurityGroup> groups = describeSecurityGroupsResult.getSecurityGroups();
+        groups = groups.stream().filter(
+                (SecurityGroup sg) -> !"default".equalsIgnoreCase(sg.getGroupName())
+        ).collect(Collectors.toList());
+        for (SecurityGroup securityGroup: groups) {
+            String name = securityGroup.getGroupName();
+            String id = securityGroup.getGroupId();
+            DescribeSecurityGroupReferencesRequest describeSecurityGroupReferencesRequest = new DescribeSecurityGroupReferencesRequest();
+            describeSecurityGroupReferencesRequest.setGroupId(Collections.singletonList(id));
+            DescribeSecurityGroupReferencesResult describeSecurityGroupReferencesResult = amazonEC2.describeSecurityGroupReferences(describeSecurityGroupReferencesRequest);
+            String str = Jackson.toJsonPrettyString(securityGroup);
+
+
         }
+
+//        EC2s.createSnapshots(amazonEC2, 60, 2, "vol-01c74045566e662b2", "xwangTest");
+
+
+
+
+//        EC2s.createInstances(amazonEC2, 5, "ami-55ef662f",
+//                "t2.nano", "xwangTestKey",
+//                1, 1,
+//                "us-east-1a", 'k', 60);
+
+
+//        DescribeDBInstancesResult  dbResult =  amazonRDS.describeDBInstances();
+//        for (DBInstance db: dbResult.getDBInstances()) {
+//            DBSubnetGroup dbSubnetGroup = db.getDBSubnetGroup();
+//            String a = "";
+//            List<String> groupIds = new ArrayList<>();
+//            for (VpcSecurityGroupMembership secMember: db.getVpcSecurityGroups()) {
+//                groupIds.add(secMember.getVpcSecurityGroupId());
+//                String a = "";
+//            }
+//
+//            for (DBSecurityGroupMembership dbsec: db.getDBSecurityGroups()) {
+//                String a = "";
+//
+//            }
+//
+//            DescribeSecurityGroupsRequest dbreq = new DescribeSecurityGroupsRequest();
+//
+//            dbreq.setGroupIds(groupIds);
+//            DescribeSecurityGroupsResult describeSecurityGroupsResult = amazonEC2.describeSecurityGroups(dbreq);
+//            for (SecurityGroup secGroup: describeSecurityGroupsResult.getSecurityGroups()) {
+//                String b = "";
+//            }
+//        }
+//
+
+//
+//        AWSElasticsearch awsElasticsearch = AwsApiGateway.getAWSService(null, null, AwsApiGateway.EXTERNAL_ID,
+//                AwsApiGateway.ROLE_ARN, AWSElasticsearch.class);
+//
+//        ListDomainNamesRequest listDomainNamesRequest = new ListDomainNamesRequest();
+//        ListDomainNamesResult listDomainNamesResult =  awsElasticsearch.listDomainNames(listDomainNamesRequest);
+//        List<String> domainNames = new ArrayList<>();
+//        for (DomainInfo domainInfo: listDomainNamesResult.getDomainNames()) {
+//            domainNames.add(domainInfo.getDomainName());
+//        }
+//
+//        DescribeElasticsearchDomainsRequest domainsRequest = new DescribeElasticsearchDomainsRequest();
+//        domainsRequest.setDomainNames(domainNames);
+//        DescribeElasticsearchDomainsResult domainsResult = awsElasticsearch.describeElasticsearchDomains(domainsRequest);
+//
+//        for (ElasticsearchDomainStatus domainStatus: domainsResult.getDomainStatusList()) {
+//
+//            DescribeElasticsearchDomainConfigRequest configReq = new DescribeElasticsearchDomainConfigRequest();
+//            configReq.setDomainName(domainStatus.getDomainName());
+//            DescribeElasticsearchDomainConfigResult configResult = awsElasticsearch.describeElasticsearchDomainConfig(configReq);
+//
+//            String str = "";
+//        }
+
+
+//        for (DomainInfo domainInfo: listDomainNamesResult.getDomainNames()) {
+//            DescribeElasticsearchDomainConfigRequest configReq = new DescribeElasticsearchDomainConfigRequest();
+//            configReq.setDomainName(domainInfo.getDomainName());
+//            DescribeElasticsearchDomainConfigResult configResult = awsElasticsearch.describeElasticsearchDomainConfig(configReq);
+//
+//            DescribeElasticsearchDomainRequest domainReq = new DescribeElasticsearchDomainRequest();
+//            domainReq.setDomainName(domainInfo.getDomainName());
+//            DescribeElasticsearchDomainResult domainResult = awsElasticsearch.describeElasticsearchDomain(domainReq);
+//
+//            String str = "";
+//        }
+//
+//        AmazonIdentityManagement amazonIdentityManagement = AwsApiGateway.getAWSService(null, "devinsecure", null,
+//                null, AmazonIdentityManagement.class);
+//        AmazonIdentityManagement amazonIdentityManagement = AwsApiGateway.getAWSService(null, null, AwsApiGateway.EXTERNAL_ID,
+//                AwsApiGateway.ROLE_ARN, AmazonIdentityManagement.class);
+
+//        List<User> users = amazonIdentityManagement.listUsers().getUsers();
+//
+//        for (User user: users) {
+//            GetUserPolicyRequest getUserPolicyRequest = new GetUserPolicyRequest();
+//            getUserPolicyRequest.setUserName(user.getUserName());
+//            GetUserPolicyResult getUserPolicyResult = amazonIdentityManagement.getUserPolicy(getUserPolicyRequest);
+//            String str = Jackson.toJsonPrettyString(getUserPolicyResult);
+//        }
+//            GetUserRequest getUserRequest = new GetUserRequest();
+//            getUserRequest.setUserName(user.getUserName());
+//            GetUserResult getUserResult = amazonIdentityManagement.getUser(getUserRequest);
+//
+//            ListUserPoliciesRequest listUserPoliciesRequest = new ListUserPoliciesRequest();
+//            listUserPoliciesRequest.setUserName(user.getUserName());
+//            ListUserPoliciesResult listUserPoliciesResult = amazonIdentityManagement.listUserPolicies(listUserPoliciesRequest);
+//
+//            for (String policyName: listUserPoliciesResult.getPolicyNames()) {
+//                GetUserPolicyRequest getUserPolicyRequest = new GetUserPolicyRequest();
+//                getUserPolicyRequest.setUserName(user.getUserName());
+//                GetUserPolicyResult getUserPolicyResult = amazonIdentityManagement.getUserPolicy(getUserPolicyRequest);
+//
+//                ListAttachedUserPoliciesRequest listAttachedUserPoliciesRequest = new ListAttachedUserPoliciesRequest();
+//                listAttachedUserPoliciesRequest.setUserName(user.getUserName());
+//                ListAttachedUserPoliciesResult listAttachedUserPoliciesResult = amazonIdentityManagement.listAttachedUserPolicies(listAttachedUserPoliciesRequest);
+//
+//                for (AttachedPolicy attachedPolicy: listAttachedUserPoliciesResult.getAttachedPolicies()) {
+//                    GetPolicyRequest getPolicyRequest = new GetPolicyRequest();
+//                    getPolicyRequest.setPolicyArn(attachedPolicy.getPolicyArn());
+//                    GetPolicyResult getPolicyResult = amazonIdentityManagement.getPolicy(getPolicyRequest);
+//
+//                    System.out.println(Jackson.toJsonPrettyString(getPolicyResult));
+//                }
+//
+//
+//            }
+//
+//
+//            System.out.println(Jackson.toJsonPrettyString(getUserResult));
+//        }
 
 
         System.out.println("here");

@@ -1,6 +1,25 @@
 # edw
 
 ### TODO
+* builtin scripts and their cmd line script
+    * redis wrapper (export of key-vals by pattern)
+    * populate built-in rows into db
+* parameter scripts
+    * each script allow a binding of params from string to string.
+        * how string values are converted depends on script type
+    * each execution record both the script and params
+    * builtin script provide script and default params binding
+    * script and params binding are stored together as value in json format.
+``` json
+{"script": "echo abc",
+ "params":
+   {
+     "param1": "value1",
+     "param2": "[1, 2, 3]"
+   }
+}
+```
+
 * aws scripts in clojure: creating/deleting/checking signatures scripts
 * caching aws function calls
 * application dashboard: monitoring health of system

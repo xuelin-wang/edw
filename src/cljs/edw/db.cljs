@@ -2,20 +2,40 @@
 
 (def default-db
   {:page :home
+   :auth {:user ""
+          :registering? false
+          }
    :cmd {:cmd-type "bash"
          :script {
                   "bash"
-                  "
-echo 'Bash version ${BASH_VERSION}...'
-for i in {0..10}
-do
-    echo \"Welcome $i times\"
-done
-"
+                  {
+                   "script"
+                   "
+ echo 'Bash version ${BASH_VERSION}...'
+ for i in $(seq 0 $execute_times)
+ do
+     echo \"Welcome $i times\"
+ done
+ "
+                   "params"
+                   {
+                    "execute_times"
+                    "10"
+                    }
+                   }
+
                   "clojure"
-"
-(let [pi (Math/PI)
-    r  1959
-    area (* 4 pi r r)]
-  (str \"Earth area is \" (int area) \" square miles\"))"
+                  {"script"
+                   "
+                   (let [pi (Math/PI)
+                       r  (Integer/parseInt (script-params \"radius\"))
+                       area (* 4 pi r r)]
+                     (str \"Earth area is \" (int area) \" square miles\"))
+                     "
+                    "params"
+                     {
+                      "radius"
+                      "1959"
+                      }
+                   }
                   }}})
