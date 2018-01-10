@@ -237,15 +237,13 @@ public class Tmp {
 //
 //        String str = Jackson.toJsonPrettyString(describeSnapshotsResult);
 
-//        AmazonRDS amazonRDS = AwsApiGateway.getAWSService("ca-central-1", null, "xwangEvidentQA", "arn:aws:iam::949130717509:role/xwangDevInsecureRole", AmazonRDS.class);
-//        AmazonRDS amazonRDS = AwsApiGateway.getAWSService("us-east-1", "evidentiodev", null, null, AmazonRDS.class);
 
 //
 
 
 
 
-        AmazonEC2 amazonEC2 = AwsApiGateway.getAWSService("ca-central-1", "evidentqa", null, null, AmazonEC2.class);
+        AmazonEC2 amazonEC2 = AwsApiGateway.getAWSService("us-east-1", null, null, null, AmazonEC2.class);
 
         DescribeSecurityGroupsRequest describeSecurityGroupsRequest = new DescribeSecurityGroupsRequest();
         DescribeSecurityGroupsResult describeSecurityGroupsResult =  amazonEC2.describeSecurityGroups();
