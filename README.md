@@ -69,9 +69,6 @@ lein cljsbuild once
 lein uberjar
 ```
 
-### Questions?
-Contact xwang@evident.io
-
 ### Sample .aws config files content
 File config sample content:
 ```
