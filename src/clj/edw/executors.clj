@@ -20,7 +20,7 @@
     (when (= exit-code "0")
       (let [script-json-obj {"script" script "params" script-params}
             script-json (json/generate-string script-json-obj)]
-        (r/with-redis redis (.zincrby redis (edw.common-utils/redis-script-key script-type "executed") 1.0 script-json) )
+        (r/with-web-redis redis (.zincrby redis (edw.common-utils/redis-script-key script-type "executed") 1.0 script-json) )
         )
       )
     {:exit exit-code
@@ -35,7 +35,7 @@
     (when (= exit-code "0")
       (let [script-json-obj {"script" script "params" script-params}
             script-json (json/generate-string script-json-obj)]
-        (r/with-redis redis (.zincrby redis (edw.common-utils/redis-script-key script-type "executed") 1.0 script-json) )
+        (r/with-web-redis redis (.zincrby redis (edw.common-utils/redis-script-key script-type "executed") 1.0 script-json) )
         )
       )
     {:exit exit-code
@@ -59,7 +59,7 @@
   (let
     [execute-script script
      results (binding [script-params params] (local-eval (read-string script)))]
-    (r/with-redis redis (.zincrby redis (edw.common-utils/redis-script-key "clojure" "executed") 1.0 script) )
+    (r/with-web-redis redis (.zincrby redis (edw.common-utils/redis-script-key "clojure" "executed") 1.0 script) )
     {:data (str results)}))
 
 (defn execute [script-type script script-params]
@@ -74,7 +74,7 @@
 (defn search-scripts [script-type script-list pattern max-return]
   (let [scan-params (-> (ScanParams.) (.count max-return) (.match pattern))
         scan-result
-        (r/with-redis redis (.zscan redis (edw.common-utils/redis-script-key script-type script-list) "0" scan-params) )
+        (r/with-web-redis redis (.zscan redis (edw.common-utils/redis-script-key script-type script-list) "0" scan-params) )
         tuples (.getResult scan-result)
         scripts (vec (map (fn [tuple] (.getElement tuple)) tuples))
         ]
@@ -85,7 +85,7 @@
 (defn save-script [script-type script script-params script-list]
   (let [script-json-obj {"script" script "params" script-params}
         script-json (json/generate-string script-json-obj)]
-    (r/with-redis redis (.zincrby redis (edw.common-utils/redis-script-key script-type script-list) 1.0 script-json) )
+    (r/with-web-redis redis (.zincrby redis (edw.common-utils/redis-script-key script-type script-list) 1.0 script-json) )
     {:data true}
     )
   )
