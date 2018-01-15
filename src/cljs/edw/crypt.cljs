@@ -1,7 +1,8 @@
 (ns edw.crypt
   (:require [goog.crypt]
             [goog.crypt.Aes]
-            [goog.crypt.Sha256]))
+            [goog.crypt.Sha256])
+)
 
 
 (defn new-uuid []

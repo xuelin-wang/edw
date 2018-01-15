@@ -29,7 +29,7 @@
            param (json/parse-string p-str)]
        (if true
          (let [cmd-type (get param "cmd-type")
-               cmd-list (get param "cmd-list")
+               cmd-list (get param "list-name")
                pattern (get param "pattern")
                max-return (get param "max-return")
                results (executors/search-scripts cmd-type cmd-list pattern (int (or max-return "50")))
@@ -47,6 +47,19 @@
                script-params (get script-and-params "params")
                list-name (get param "list-name")
                results (executors/save-script cmd-type script script-params list-name)
+               results-str (json/generate-string results)]
+           (response/ok results-str))
+         (response/ok {:data permission-denied}))))
+
+   (POST "/cmdSearchScriptParams" [p :as request]
+     (let [p-str (URLDecoder/decode p "UTF-8")
+           param (json/parse-string p-str)]
+       (if true
+         (let [cmd-type (get param "cmd-type")
+               cmd-list (get param "list-name")
+               script (get param "script")
+               script-params-key (executors/redis-script-params-key cmd-type cmd-list script)
+               results (executors/search-script-params cmd-type cmd-list script)
                results-str (json/generate-string results)]
            (response/ok results-str))
          (response/ok {:data permission-denied}))))

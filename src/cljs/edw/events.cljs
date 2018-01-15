@@ -90,7 +90,7 @@
           search-string (str/trim (or input-search-string ""))
           cmd-type (or (:cmd-type cmd) "bash")
           cmd-list (or (:list cmd) "builtin")
-          params {:cmd-list cmd-list :cmd-type cmd-type :pattern search-string :max-return 50}]
+          params {:list-name cmd-list :cmd-type cmd-type :pattern search-string :max-return 50}]
       (if (str/blank? search-string)
         {:db
          (-> db
@@ -111,6 +111,46 @@
                       :on-failure      [:process-cmd-search-response]}
          :db (assoc-in db [:cmd :search-string] search-string)}
         )
+      )
+    )
+  )
+
+(reg-event-db
+  :process-cmd-search-params-response
+  []
+  (fn [db [_ response]]
+    (let [script-params (:data response)
+          script-params-json (.parse js/JSON script-params)
+          script-params-map (js->clj script-params-json)
+          script (get-in db [:cmd :set-script])
+          script-and-params {"script" script "params" script-params-map}
+          ]
+      (assoc-in db [:cmd :script (get-in db [:cmd :cmd-type])] script-and-params)
+      )
+    ))
+
+
+(reg-event-fx
+  :set-script
+  []
+  (fn [{:keys [db]} [_ script]]
+
+    (let [cmd (:cmd db)
+          cmd-type (or (:cmd-type cmd) "bash")
+          cmd-list (or (:list cmd) "builtin")
+          params {:list-name cmd-list :cmd-type cmd-type :script script}]
+      {
+       :http-xhrio {:method          :post
+                    :uri             "/cmdSearchScriptParams"
+                    :timeout         8000
+                    :response-format (ajax/json-response-format {:keywords? true})
+
+                    :format           (ajax/url-request-format)
+                    :params         {:p (clj->url-encoded-json params)}
+
+                    :on-success      [:process-cmd-search-params-response]
+                    :on-failure      [:process-cmd-search-params-response]}
+       :db (assoc-in db [:cmd :set-script] script)}
       )
     )
   )

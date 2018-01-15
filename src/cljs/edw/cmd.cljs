@@ -17,10 +17,8 @@
         output (if-let [loading? (:loading? cmd)] "loading..."
                                                   (str (:result cmd)))
         scripts (:scripts cmd)
-        set-script (fn [text]
-                     (let [js-obj (.parse js/JSON text)]
-                       (rf/dispatch [:update-value [:cmd :script cmd-type] (js->clj js-obj)])
-                       )
+        set-script (fn [script]
+                     (rf/dispatch [:set-script script])
                      )
         set-param (fn [name val]
                     (rf/dispatch [:update-value [:cmd :script cmd-type "params" name] val])
